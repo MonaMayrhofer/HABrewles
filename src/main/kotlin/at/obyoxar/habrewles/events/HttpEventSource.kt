@@ -14,7 +14,7 @@ import org.http4k.server.Jetty
 import org.http4k.server.asServer
 
 
-class HttpEventSource(paths: List<String>) : EventSource(paths){
+class HttpEventSource(port: Int, paths: List<String>) : EventSource(paths){
 
     val server : Http4kServer
 
@@ -27,7 +27,7 @@ class HttpEventSource(paths: List<String>) : EventSource(paths){
                 }
             }
         )
-        server = app.asServer(Jetty(8080))
+        server = app.asServer(Jetty(port))
     }
 
     override fun startListening() {

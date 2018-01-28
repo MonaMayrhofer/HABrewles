@@ -6,7 +6,9 @@ import mu.KotlinLogging
 
 private val logger = KotlinLogging.logger {  }
 class State (val name: String) {
-    val futureStates: MutableList<Transition> = ArrayList()
+
+    private val futureStates: MutableList<Transition> = ArrayList()
+
     fun disengage(){
         logger.info("Disengaging State '$name'")
         futureStates.forEach {
