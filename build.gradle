@@ -21,6 +21,9 @@ sourceCompatibility = 1.8
 repositories {
     mavenCentral()
     jcenter()
+    maven {
+        url "https://repo.eclipse.org/content/repositories/paho-releases/"
+    }
 }
 
 dependencies {
@@ -33,6 +36,7 @@ dependencies {
     compile group: "org.http4k", name: "http4k-core", version: "3.13.4"
     compile group: "org.http4k", name: "http4k-server-jetty", version: "3.13.4"
     compile group: "org.http4k", name: "http4k-client-okhttp", version: "3.13.4"
+    compile 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.0.2'
 }
 
 kotlin{

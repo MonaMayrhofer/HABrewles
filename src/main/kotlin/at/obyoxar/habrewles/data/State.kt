@@ -8,19 +8,20 @@ private val logger = KotlinLogging.logger {  }
 class State (val name: String) {
     val futureStates: MutableList<Transition> = ArrayList()
     fun disengage(){
+        logger.info("Disengaging State '$name'")
         futureStates.forEach {
             it.disengage()
         }
     }
 
     fun engage() {
+        logger.info("Engaging State '$name'")
         futureStates.forEach {
             it.engage()
         }
     }
 
-    fun addTransition(state: State, event: String, handler: (Event) -> Boolean) {
-        futureStates.add(Transition(this, state, event, handler))
+    fun addTransition(state: State, event: String, accept: (Event) -> Boolean) {
+        futureStates.add(Transition(this, state, event, accept))
     }
-
 }

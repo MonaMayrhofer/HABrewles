@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/habrewles.iml" filepath="$PROJECT_DIR$/.idea/modules/habrewles.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/habrewles_main.iml" filepath="$PROJECT_DIR$/.idea/modules/habrewles_main.iml" group="habrewles" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/habrewles_test.iml" filepath="$PROJECT_DIR$/.idea/modules/habrewles_test.iml" group="habrewles" />
+    </modules>
+  </component>
+</project>

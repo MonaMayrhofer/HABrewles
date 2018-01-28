@@ -1,22 +1,23 @@
 package at.obyoxar.habrewles.events
 
 import mu.KotlinLogging
-import java.util.*
+import java.util.Timer
+import kotlin.concurrent.schedule
 
 private val logger = KotlinLogging.logger {  }
-class TimerEventSource : EventSource() {
+class TimerEventSource(val paths: Collection<Long>) : EventSource(paths.map { it.toString() }) {
 
-    private var timer: Timer? = null
+    private val timer: Timer = Timer()
 
     override fun stopListening() {
-        logger.info("Stopping...")
-        timer?.cancel()
+        timer.cancel()
     }
 
     override fun startListening() {
-        logger.info("Starting...")
-        timer = kotlin.concurrent.timer(initialDelay = 3000, period = 3000, action = {
-            invoke(Event())
-        })
+        paths.forEach {
+            timer.schedule(it*1000, it*1000, {
+                invoke(it.toString(), Event())
+            })
+        }
     }
 }

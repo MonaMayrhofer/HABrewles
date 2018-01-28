@@ -13,6 +13,8 @@ class StateMachine(states: List<State>, initialState: State) {
     var currentState: State = initialState
         private set
 
+    private var oldState: State? = null
+
     private var transitionIdentificator: Int = 0 //TODO Can we omit this and work via currentState and FromState
 
     private var waitSemaphore: Semaphore = Semaphore(0)
@@ -21,9 +23,9 @@ class StateMachine(states: List<State>, initialState: State) {
 
     fun start(){
         for (i in 0..3) { //TODO Increase this for production
-            logger.info("Engaging State '${currentState.name}'")
 
             triggerSemaphore.drainPermits()
+            this.oldState?.disengage()
             thread {
                 while (!waitSemaphore.hasQueuedThreads());
                 triggerSemaphore.release()
@@ -38,7 +40,7 @@ class StateMachine(states: List<State>, initialState: State) {
         transitionIdentificator++
 
         //Release all (They will run into the transitionIdentificator Lock
-        currentState.disengage()
+        oldState = currentState
         currentState = transition.toState
         waitSemaphore.release()
     }
@@ -47,7 +49,7 @@ class StateMachine(states: List<State>, initialState: State) {
         logger.info("Registering transition on $string")
         val currentIdentificator = this.transitionIdentificator
 
-        EventProvider.instance.events[string]?.addHandler {
+        EventProvider.instance.addHandler (string, transition.hashCode(), {
             synchronized(transitionIdentificator){
                 if(transitionIdentificator == currentIdentificator) {
                     if (run(it)) {
@@ -57,6 +59,10 @@ class StateMachine(states: List<State>, initialState: State) {
                     }
                 }
             }
-        } ?: throw RuntimeException("EventSource $string was not found")
+        } )
+    }
+
+    fun unschedule(transition: Transition, event: String, handler: (Event) -> Boolean) {
+        EventProvider.instance.removeHandler(event, transition.hashCode())
     }
 }
