@@ -45,6 +45,7 @@ class RepositoryLoader {
                 State("Paused"),
                 LambdaStateWrapper("Shutdown", {
                     it.stateMachine.stop()
+                    //TODO Use TerminatorState here, and implement functionality so that the StateMachine stops if all traversers stop
                 })
         )
         //TODO Do something against Cross-State-Machine transitions

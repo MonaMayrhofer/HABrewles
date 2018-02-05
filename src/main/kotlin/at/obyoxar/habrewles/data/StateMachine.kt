@@ -8,6 +8,7 @@ import java.util.concurrent.*
 import kotlin.concurrent.thread
 
 //TODO State safety
+//TODO Semaphore for all traversers, so that if all traversers are dead, the StateMachine ends
 private val logger = KotlinLogging.logger {  }
 class StateMachine(states: List<State>, vararg initialStates: State) {
 
