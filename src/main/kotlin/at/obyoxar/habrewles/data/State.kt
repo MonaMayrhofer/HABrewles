@@ -5,25 +5,35 @@ import mu.KotlinLogging
 
 
 private val logger = KotlinLogging.logger {  }
-class State (val name: String) {
+open class State (val name: String) {
 
-    private val futureStates: MutableList<Transition> = ArrayList()
+    private val transitions: MutableList<Transition> = ArrayList()
+    private var engaged = false
 
-    fun disengage(){
-        logger.info("Disengaging State '$name'")
-        futureStates.forEach {
-            it.disengage()
+    fun disengage(stateMachineTraverser: StateMachineTraverser) {
+        if(!engaged) throw IllegalStateException("State is already disengaged")
+        engaged = false
+        logger.info("Traverser ${stateMachineTraverser.traverserId} Disengaging State '$name'")
+        transitions.forEach {
+            stateMachineTraverser.unschedule(it)
         }
+        disable(stateMachineTraverser)
     }
 
-    fun engage() {
-        logger.info("Engaging State '$name'")
-        futureStates.forEach {
-            it.engage()
+    protected open fun disable(stateMachineTraverser: StateMachineTraverser) = Unit
+    protected open fun enable(stateMachineTraverser: StateMachineTraverser) = Unit
+
+    fun engage(stateMachineTraverser: StateMachineTraverser) {
+        if(engaged) throw IllegalStateException("State is already engaged")
+        engaged = true
+        logger.info("Traverser ${stateMachineTraverser.traverserId} Engaging State '$name'")
+        transitions.forEach {
+            stateMachineTraverser.schedule(it)
         }
+        enable(stateMachineTraverser)
     }
 
     fun addTransition(state: State, event: String, accept: (Event) -> Boolean) {
-        futureStates.add(Transition(this, state, event, accept))
+        transitions.add(Transition(this, state, event, accept))
     }
 }

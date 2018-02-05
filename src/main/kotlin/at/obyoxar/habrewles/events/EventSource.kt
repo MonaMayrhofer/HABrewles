@@ -23,6 +23,9 @@ abstract class EventSource(paths: Collection<String>) {
 
     abstract fun stopListening()
 
+    /**
+     * @param hashCode Should be unique per path
+     */
     fun addHandler(path: String, hashCode: Int, function: (Event) -> Unit){
         synchronized(handlers) {
             handlers[path]?.add(function to hashCode) ?: throw RuntimeException("Path $path not found")

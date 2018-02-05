@@ -8,7 +8,7 @@ class App {
     fun launch(){
         RepositoryLoader().load()
         EventProvider.instance.start()
-        Repository.instance.stateMachine.start()
+        Repository.instance.rootStateMachine.start(true)
         EventProvider.instance.stop()
     }
 }

@@ -2,10 +2,10 @@ package at.obyoxar.habrewles.data
 
 class Repository{
 
-    val stateMachine: StateMachine
+    val rootStateMachine: StateMachine
 
-    private constructor(stateMachine: StateMachine){
-        this.stateMachine = stateMachine
+    private constructor(rootStateMachine: StateMachine){
+        this.rootStateMachine = rootStateMachine
     }
 
     companion object {
