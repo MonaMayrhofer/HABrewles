@@ -20,4 +20,6 @@ class TimerEventSource(val paths: Collection<Long>) : EventSource(paths.map { it
             })
         }
     }
+
+    //TODO When event registers @ t = 4, a 5 second delay only is 1s
 }

@@ -27,10 +27,11 @@ open class State (val name: String) {
         if(engaged) throw IllegalStateException("State is already engaged")
         engaged = true
         logger.info("Traverser ${stateMachineTraverser.traverserId} Engaging State '$name'")
+
+        enable(stateMachineTraverser)
         transitions.forEach {
             stateMachineTraverser.schedule(it)
         }
-        enable(stateMachineTraverser)
     }
 
     fun addTransition(state: State, event: String, accept: (Event) -> Boolean) {

@@ -3,9 +3,11 @@ package at.obyoxar.habrewles.data
 import at.obyoxar.habrewles.events.Event
 import at.obyoxar.habrewles.events.EventProvider
 import mu.KotlinLogging
+import java.util.*
 import java.util.concurrent.*
 import kotlin.concurrent.thread
 
+//TODO State safety
 private val logger = KotlinLogging.logger {  }
 class StateMachine(states: List<State>, vararg initialStates: State) {
 
@@ -16,14 +18,17 @@ class StateMachine(states: List<State>, vararg initialStates: State) {
 
     val traversers: MutableList<StateMachineTraverser> = initialStates.map { StateMachineTraverser(this, it) }.toMutableList()
 
+    val stateMachineId = UUID.randomUUID()
+
     fun start(blocking: Boolean){
-        logger.info("Starting up")
+        logger.info("StateMachine $stateMachineId: Starting up")
         traversers.forEach {
             thread {
                 it.start()
+                logger.info("Traverser ${it.traverserId} - Thread is finished.")
             }
         }
-        logger.info(" - Started up")
+        logger.info("StateMachine $stateMachineId: - Started up")
 
         if(blocking)
             runSemaphore.acquire()
@@ -33,9 +38,9 @@ class StateMachine(states: List<State>, vararg initialStates: State) {
      * May be called from every thread
      */
     fun stop(){
-        logger.info("Shutting down")
+        logger.info("StateMachine $stateMachineId: Shutting down")
         traversers.forEach { it.stop() }
-        logger.info(" - Shut down")
+        logger.info("StateMachine $stateMachineId: - Shut down")
         runSemaphore.release()
     }
 }

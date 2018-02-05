@@ -53,6 +53,8 @@ class StateMachineTraverser(
         isTraversing = true
         traverserThread = Thread.currentThread()
 
+        logger.info("Traverser: ${stateMachine.stateMachineId} $traverserId Started up.")
+
         //Loop Start
         while(isTraversing){
 
@@ -69,12 +71,13 @@ class StateMachineTraverser(
         }
         //Loop End
 
-        logger.info("$traverserId Shut down.")
+        logger.info("Traverser: ${stateMachine.stateMachineId} $traverserId Shut down.")
         isTraversing = false
     }
 
     fun stop(){
         if(!isTraversing) throw IllegalStateException("Traverser is already stopped!")
+        logger.info("Traverser: ${stateMachine.stateMachineId} $traverserId Shutting down.")
         isTraversing = false
         currentTransitionSemaphore.release()
     }
